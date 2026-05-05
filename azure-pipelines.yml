@@ -1,4 +1,5 @@
 # Starter pipeline
+
 trigger:
 - master
 - release/*
@@ -7,44 +8,26 @@ stages:
 - stage: Build
   displayName: 'Build Stage'
   jobs:
-
-  # Job 1: Simple build job
   - job: BuildJob
     displayName: 'Build Job'
     pool:
       vmImage: windows-latest
-    steps:
-    - script: |
-        echo "Restoring project dependencies..."
-      displayName: 'Restore Dependencies'
-
-    - script: |
-        echo "Running unit tests..."
-      displayName: 'Run unit tests'
-
-  # Job 2: Matrix build for multiple .NET versions
-  - job: DotNet_Matrix_Build
-    displayName: 'Build & Test on multiple .NET versions'
-    pool:
-      vmImage: windows-latest
-
-    strategy:
-      maxParallel: 2
-      matrix:
-        net6:
-          dotnetVersion: '6.0.x'
-        net8:
-          dotnetVersion: '8.0.x'
 
     steps:
     - task: UseDotNet@2
-      displayName: 'Install .NET SDK $(dotnetVersion)'
+      displayName: 'Install .NET SDK 8'
       inputs:
         packageType: 'sdk'
-        version: '$(dotnetVersion)'
+        version: '8.0.x'
 
     - script: dotnet --version
       displayName: 'Verify SDK version'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore'
+      inputs:
+        command: restore
+        projects: '**/*.csproj'
 
     - task: DotNetCoreCLI@2
       displayName: 'Build'
@@ -53,8 +36,7 @@ stages:
         projects: '**/*.csproj'
 
     - task: DotNetCoreCLI@2
-      displayName: 'Test with Code Coverage'
+      displayName: 'Run unit tests'
       inputs:
         command: test
         projects: '**/*.csproj'
-        arguments: '--collect:"XPlat Code Coverage"'
