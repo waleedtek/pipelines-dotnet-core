@@ -1,7 +1,7 @@
 # Starter pipeline
 
-trigger:
-- master
+trigger: none
+pr: none
 
 stages:
 # -------------------------
