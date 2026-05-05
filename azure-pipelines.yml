@@ -8,12 +8,12 @@ trigger:
 
 strategy:
   matrix:
-   linux: 
-    imageName: "ubantu-latest"
-   mac:
-    imageName: "macOS-latest"
-   windows:
-    imageName: "windows-latest" 
+    linux:
+      imageName: "ubuntu-latest"
+    mac:
+      imageName: "macOS-latest"
+    windows:
+      imageName: "windows-latest"
   maxParallel: 3
 
 pool:
