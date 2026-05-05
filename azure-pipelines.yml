@@ -67,7 +67,7 @@ stages:
   - job: DeployStagingJob
     displayName: 'Deploy to Staging Job'
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'windows-latest'
     steps:
     - script: |
         echo "Build staging job..."
