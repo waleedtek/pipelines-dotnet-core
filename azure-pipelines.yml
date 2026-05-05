@@ -9,17 +9,39 @@ trigger:
 pool:
   vmImage: windows-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+jobs:
+- job: DotNet_Matrix_Build
+  displayName: 'Build & Test on multiple .NET versions'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  strategy:
+    matrix:
+      net6:
+        dotnetVersion: '6.0.x'
+      net8:
+        dotnetVersion: '8.0.x'
+    maxParallel: 2
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: test
-    projects: '**/*.csproj'
-    arguments: '--collect:"XPlat Code Coverage"'
+  steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET SDK $(dotnetVersion)'
+    inputs:
+      packageType: 'sdk'
+      version: '$(dotnetVersion)'
+
+  - script: dotnet --version
+    displayName: 'Verify SDK version'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build'
+    inputs:
+      command: build
+      projects: '**/*.csproj'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Test with Code Coverage'
+    inputs:
+      command: test
+      projects: '**/*.csproj'
+      arguments: '--collect:"XPlat Code Coverage"'
+
+
