@@ -5,6 +5,9 @@ trigger:
 - release/*
 
 stages:
+# -------------------------
+# BUILD STAGE
+# -------------------------
 - stage: Build
   displayName: 'Build Stage'
   jobs:
@@ -12,7 +15,6 @@ stages:
     displayName: 'Build Job'
     pool:
       vmImage: windows-latest
-
     steps:
     - task: UseDotNet@2
       displayName: 'Install .NET SDK 8'
@@ -35,6 +37,19 @@ stages:
         command: build
         projects: '**/*.csproj'
 
+
+# -------------------------
+# TEST STAGE
+# -------------------------
+- stage: Test
+  displayName: 'Test Stage'
+  dependsOn: Build
+  jobs:
+  - job: TestJob
+    displayName: 'Test Job'
+    pool:
+      vmImage: windows-latest
+    steps:
     - task: DotNetCoreCLI@2
       displayName: 'Run unit tests'
       inputs:
