@@ -16,6 +16,9 @@ stages:
       vmImage: windows-latest
     steps:
     - template: azure-pipelines-steps-windows.yml
+
+    - checkout: self
+      persistCredentials: true
     - task: UseDotNet@2
       displayName: 'Install .NET SDK 8'
       inputs:
