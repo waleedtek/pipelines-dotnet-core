@@ -146,4 +146,16 @@ stages:
         echo "Rolling back the deployment..."
         # Add your rollback commands here
       displayName: 'Run rollback commands'
-      
+
+- stage: GitCheck
+  displayName: 'git check Stage'
+  trigger: manual
+  jobs:
+  - job: GitCheck
+    displayName: 'Git check stage'
+    steps:
+     - checkout: self
+       clean: true
+     - task: CmdLine@2
+       inputs:
+         script: 'git ls-files'
